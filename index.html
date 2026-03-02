@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExtForge Studio v2 — by Abdelrahman Ayman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: '#070a10',
+              sf: '#0d1118',
+              sf2: '#111826',
+              sf3: '#16203a',
+              bdr: '#1a2840',
+              bdr2: '#223060',
+              a1: '#3b82f6',
+              a2: '#22d3a5',
+              a3: '#f59e0b',
+              a4: '#a78bfa',
+              a5: '#f43f5e',
+              txt: '#d1d5e0',
+              bright: '#f0f4ff',
+              mt: '#6b7a99',
+              mt2: '#3d4d6b',
+            },
+            fontFamily: {
+              mono: ["'JetBrains Mono'", 'monospace'],
+              disp: ["'Syne'", 'sans-serif'],
+              body: ["'Plus Jakarta Sans'", 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Mobile overlay -->
+    <div
+      id="mobileOverlay"
+      class="fixed inset-0 z-[300] bg-black/70 hidden"
+      onclick="closeMobileMenu()"
+    ></div>
+
+    <!-- Mobile sidebar -->
+    <div
+      id="mobileSidebar"
+      class="fixed top-0 left-0 h-full w-64 bg-sf border-r border-bdr z-[400] flex flex-col overflow-hidden"
+      style="transform: translateX(-100%); transition: transform 0.3s"
+    >
+      <div class="flex items-center justify-between p-3 border-b border-bdr">
+        <div class="logo">
+          <div class="logo-icon">⚡</div>
+          Ext<em>Forge</em>
+        </div>
+        <button
+          class="text-mt hover:text-bright text-xl leading-none"
+          onclick="closeMobileMenu()"
+        >
+          ✕
+        </button>
+      </div>
+      <nav
+        class="flex flex-col overflow-y-auto flex-1 p-2 gap-1"
+        id="mobileNav"
+      >
+        <button
+          class="mobile-tab on"
+          onclick="
+            switchPage('ext', this);
+            closeMobileMenu();
+          "
+        >
+          🔌 Extension Builder
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('theme', this);
+            closeMobileMenu();
+          "
+        >
+          🎨 Theme Creator
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('icons', this);
+            closeMobileMenu();
+          "
+        >
+          🖼️ Icon Pack
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('settings', this);
+            closeMobileMenu();
+          "
+        >
+          ⚙️ VS Code Settings
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('snippets', this);
+            closeMobileMenu();
+          "
+        >
+          ✂️ Snippet Studio
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('keybinds', this);
+            closeMobileMenu();
+          "
+        >
+          ⌨️ Keybindings
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('changelog', this);
+            closeMobileMenu();
+          "
+        >
+          📋 Changelog
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('publish', this);
+            closeMobileMenu();
+          "
+        >
+          🚀 Publish Wizard
+        </button>
+        <button
+          class="mobile-tab"
+          onclick="
+            switchPage('templates', this);
+            closeMobileMenu();
+          "
+        >
+          📁 Templates
+        </button>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <button
+        class="md:hidden flex-shrink-0 w-8 h-8 rounded border border-bdr bg-sf2 text-mt flex items-center justify-center mr-2"
+        onclick="openMobileMenu()"
+      >
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <path
+            d="M1.5 3h12M1.5 7.5h12M1.5 12h12"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <span
+          >Ext<em>Forge</em> <span class="hidden sm:inline">Studio</span></span
+        >
+      </div>
+      <nav class="main-nav hidden md:flex">
+        <button class="mtab on" onclick="switchPage('ext', this)">
+          <span class="ti">🔌</span
+          ><span class="hidden xl:inline"> Extension</span>
+        </button>
+        <button class="mtab" onclick="switchPage('theme', this)">
+          <span class="ti">🎨</span><span class="hidden xl:inline"> Theme</span>
+        </button>
+        <button class="mtab" onclick="switchPage('icons', this)">
+          <span class="ti">🖼️</span><span class="hidden xl:inline"> Icons</span>
+        </button>
+        <button class="mtab" onclick="switchPage('settings', this)">
+          <span class="ti">⚙️</span
+          ><span class="hidden xl:inline"> Settings</span>
+        </button>
+        <button class="mtab" onclick="switchPage('snippets', this)">
+          <span class="ti">✂️</span
+          ><span class="hidden xl:inline"> Snippets</span>
+        </button>
+        <button class="mtab" onclick="switchPage('keybinds', this)">
+          <span class="ti">⌨️</span
+          ><span class="hidden xl:inline"> Keybinds</span>
+        </button>
+        <button class="mtab" onclick="switchPage('changelog', this)">
+          <span class="ti">📋</span
+          ><span class="hidden xl:inline"> Changelog</span>
+        </button>
+        <button class="mtab" onclick="switchPage('publish', this)">
+          <span class="ti">🚀</span
+          ><span class="hidden xl:inline"> Publish</span>
+        </button>
+        <button class="mtab" onclick="switchPage('templates', this)">
+          <span class="ti">📁</span
+          ><span class="hidden xl:inline"> Templates</span>
+        </button>
+      </nav>
+      <div class="hdr-right">
+        <a
+          class="author-badge"
+          href="https://www.linkedin.com/in/abdelrahman968/"
+          target="_blank"
+        >
+          <div class="author-avatar">AA</div>
+          <div class="hidden lg:block">
+            <div class="author-name">Abdelrahman Ayman</div>
+            <div class="author-li">linkedin.com/in/abdelrahman968</div>
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="mainSidebar">
+        <div class="sb-scroll">
+          <div class="shdr">Extension Info</div>
+          <div class="frow">
+            <label>Name (no spaces)</label
+            ><input type="text" id="extName" value="my-extension" />
+          </div>
+          <div class="frow">
+            <label>Display Name</label
+            ><input type="text" id="extDisplay" value="My Extension" />
+          </div>
+          <div class="frow">
+            <label>Publisher ID</label
+            ><input type="text" id="extPub" value="mycompany" />
+          </div>
+          <div class="frow">
+            <label>Version</label
+            ><input type="text" id="extVer" value="0.1.0" />
+          </div>
+          <div class="frow">
+            <label>Description</label
+            ><textarea id="extDesc">A powerful VS Code extension.</textarea>
+          </div>
+          <div class="shdr">Type &amp; Activation</div>
+          <div class="frow">
+            <label>Category</label>
+            <select id="extCat">
+              <option value="commands">Commands &amp; Shortcuts</option>
+              <option value="languages">Language Support</option>
+              <option value="snippets">Code Snippets</option>
+              <option value="formatters">Code Formatters</option>
+              <option value="linters">Linters &amp; Diagnostics</option>
+              <option value="sidebar">Sidebar &amp; Panels</option>
+              <option value="keybindings">Keybindings</option>
+              <option value="debugger">Debugger Integration</option>
+              <option value="notebook">Notebook Support</option>
+              <option value="testing">Testing Framework</option>
+            </select>
+          </div>
+          <div class="frow">
+            <label>Activation Event</label>
+            <select id="extAct">
+              <option>onStartupFinished</option>
+              <option>onCommand</option>
+              <option>onLanguage</option>
+              <option>workspaceContains</option>
+              <option>*</option>
+            </select>
+          </div>
+          <div class="frow">
+            <label>Output Language</label>
+            <select id="extLang">
+              <option value="ts">TypeScript</option>
+              <option value="js">JavaScript</option>
+            </select>
+          </div>
+          <div class="shdr">Features</div>
+          <div class="feat-grid" id="featGrid">
+            <div class="fchip" data-f="statusBar" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Status Bar
+            </div>
+            <div class="fchip" data-f="webview" onclick="toggleFeat(this)">
+              <span class="fdot"></span>WebView Panel
+            </div>
+            <div class="fchip" data-f="treeView" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Tree View
+            </div>
+            <div class="fchip" data-f="decorations" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Decorations
+            </div>
+            <div class="fchip" data-f="completions" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Completions
+            </div>
+            <div class="fchip" data-f="hover" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Hover Provider
+            </div>
+            <div class="fchip" data-f="diagnostics" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Diagnostics
+            </div>
+            <div class="fchip" data-f="settings" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Settings UI
+            </div>
+            <div class="fchip" data-f="quickpick" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Quick Pick
+            </div>
+            <div class="fchip" data-f="codelens" onclick="toggleFeat(this)">
+              <span class="fdot"></span>CodeLens
+            </div>
+            <div class="fchip" data-f="refactoring" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Refactoring
+            </div>
+            <div class="fchip" data-f="workspace" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Workspace FS
+            </div>
+            <div class="fchip" data-f="terminal" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Terminal API
+            </div>
+            <div class="fchip" data-f="git" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Git Integration
+            </div>
+            <div class="fchip" data-f="debug" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Debug Adapter
+            </div>
+            <div class="fchip" data-f="notebook" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Notebook Kernel
+            </div>
+            <div class="fchip" data-f="tasks" onclick="toggleFeat(this)">
+              <span class="fdot"></span>Task Provider
+            </div>
+            <div class="fchip" data-f="scm" onclick="toggleFeat(this)">
+              <span class="fdot"></span>SCM Provider
+            </div>
+          </div>
+          <div class="shdr">Commands</div>
+          <div class="cwrap" id="cmdsWrap">
+            <div class="cmd-r">
+              <input
+                type="text"
+                value="helloWorld"
+                placeholder="commandId"
+              /><button class="bx" onclick="rmCmd(this)">×</button>
+            </div>
+          </div>
+          <div style="padding: 0 16px 10px">
+            <button class="badd" onclick="addCmd()">+ Add Command</button>
+          </div>
+          <div class="shdr">Keybindings</div>
+          <div class="cwrap" id="keysWrap">
+            <div class="cmd-r">
+              <input
+                type="text"
+                value="ctrl+shift+p"
+                placeholder="key combo"
+              /><button class="bx" onclick="this.parentElement.remove()">
+                ×
+              </button>
+            </div>
+          </div>
+          <div style="padding: 0 16px 10px">
+            <button class="badd" onclick="addKey()">+ Add Keybinding</button>
+          </div>
+          <div class="shdr">Context &amp; Languages</div>
+          <div class="frow">
+            <label>Target Languages</label
+            ><input
+              type="text"
+              id="extLangs"
+              placeholder="javascript, typescript, python"
+            />
+          </div>
+          <div class="frow">
+            <label>Min VS Code Version</label
+            ><input type="text" id="extMinVsc" value="^1.80.0" />
+          </div>
+          <div class="shdr">Extra Notes</div>
+          <div class="frow">
+            <label>Notes / Requirements</label
+            ><textarea
+              id="extExtra"
+              placeholder="Additional requirements..."
+              style="min-height: 70px"
+            ></textarea>
+          </div>
+        </div>
+        <div class="sb-foot">
+          <button class="btn-gen" id="genBtn" onclick="generateExt()">
+            <span class="btn-lbl">⚡ Generate Extension</span>
+            <div class="spin"></div>
+          </button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <!-- Extension Builder -->
+        <div class="page on" id="page-ext">
+          <div style="display: flex; flex-direction: column; height: 100%">
+            <div class="ptabs">
+              <button class="ptab on" onclick="switchPane('welcome', this)">
+                Overview
+              </button>
+              <button
+                class="ptab"
+                onclick="switchPane('code', this)"
+                id="codeTabBtn"
+              >
+                Generated Code
+              </button>
+              <button class="ptab" onclick="switchPane('guide', this)">
+                Install Guide
+              </button>
+              <button class="ptab" onclick="switchPane('readme', this)">
+                README
+              </button>
+            </div>
+            <div class="pane-area">
+              <div class="lcover" id="extLoading">
+                <div class="ldots"><span></span><span></span><span></span></div>
+                <div class="lmsg" id="extLoadMsg">Generating extension…</div>
+                <div class="lsub">Building all your files</div>
+              </div>
+              <div class="pane on welcome" id="pane-welcome">
+                <div class="wi">🔌</div>
+                <h2>VS Code Extension Builder</h2>
+                <p>
+                  Fill the sidebar form, pick features, then click
+                  <strong style="color: var(--a1)">Generate</strong> to get
+                  complete production-ready TypeScript/JavaScript code —
+                  instantly &amp; 100% free.
+                </p>
+                <div class="pills">
+                  <span class="pill">📦 package.json</span
+                  ><span class="pill">🔧 extension.ts</span>
+                  <span class="pill">🏷️ types.ts</span
+                  ><span class="pill">⚙️ tsconfig.json</span>
+                  <span class="pill">🧪 extension.test.ts</span
+                  ><span class="pill">📖 README.md</span>
+                  <span class="pill">🔄 CHANGELOG.md</span
+                  ><span class="pill">🚫 .vscodeignore</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    margin-top: 18px;
+                  "
+                >
+                  <span class="free-badge">✅ 100% Free</span>
+                  <span class="free-badge">🔒 No API Keys</span>
+                  <span class="free-badge">⚡ Instant</span>
+                  <span class="free-badge">📦 Download ZIP</span>
+                </div>
+              </div>
+              <div class="pane" id="pane-code" style="flex-direction: column">
+                <div class="tbar">
+                  <button class="bsm" onclick="copyCurrentFile()">
+                    📋 Copy
+                  </button>
+                  <button class="bsm warn" onclick="formatCode()">
+                    ✨ Format
+                  </button>
+                  <button class="bsm green" onclick="downloadAll()">
+                    ⬇️ All Files
+                  </button>
+                  <button class="bsm hi" onclick="downloadZip()">📦 ZIP</button>
+                </div>
+                <div class="fbar" id="fileBar"></div>
+                <div class="code-wrap">
+                  <pre id="codeOut">// Generated code will appear here</pre>
+                </div>
+              </div>
+              <div
+                class="pane"
+                id="pane-guide"
+                style="overflow-y: auto; padding: 28px"
+              >
+                <h2
+                  style="
+                    font-size: 1.35rem;
+                    margin-bottom: 6px;
+                    font-family: var(--disp);
+                  "
+                >
+                  🚀 Install &amp; Test Your Extension
+                </h2>
+                <p
+                  style="
+                    font-family: var(--mono);
+                    font-size: 0.78rem;
+                    color: var(--mt);
+                    margin-bottom: 26px;
+                  "
+                >
+                  Follow these steps to run your extension locally in VS Code.
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 18px;
+                    max-width: 640px;
+                  "
+                  id="guideSteps"
+                ></div>
+              </div>
+              <div
+                class="pane"
+                id="pane-readme"
+                style="overflow-y: auto; padding: 28px; background: #080c14"
+              >
+                <div
+                  id="readmePreview"
+                  style="
+                    font-family: var(--mono);
+                    font-size: 0.8rem;
+                    color: #c0cadc;
+                    line-height: 1.8;
+                    max-width: 760px;
+                    white-space: pre-wrap;
+                  "
+                >
+                  Generate an extension to see its README here.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theme Creator -->
+        <div class="page" id="page-theme">
+          <div class="theme-layout">
+            <div class="te" id="themeEditor">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: flex-start;
+                  margin-bottom: 18px;
+                  flex-wrap: wrap;
+                  gap: 10px;
+                "
+              >
+                <div>
+                  <h2
+                    style="
+                      font-family: var(--disp);
+                      font-size: 1.25rem;
+                      font-weight: 800;
+                    "
+                  >
+                    Theme Creator
+                  </h2>
+                  <p
+                    style="
+                      font-family: var(--mono);
+                      font-size: 0.75rem;
+                      color: var(--mt);
+                      margin-top: 3px;
+                    "
+                  >
+                    Customize VS Code color tokens. Export as a theme extension.
+                  </p>
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                  <button class="bsm" onclick="loadPreset('dark')">
+                    🌑 Dark+
+                  </button>
+                  <button class="bsm" onclick="loadPreset('light')">
+                    ☀️ Light
+                  </button>
+                  <button class="bsm" onclick="loadPreset('horizon')">
+                    🌅 Horizon
+                  </button>
+                  <button class="bsm" onclick="loadPreset('dracula')">
+                    🧛 Dracula
+                  </button>
+                  <button class="bsm" onclick="loadPreset('solarized')">
+                    🌞 Solarized
+                  </button>
+                  <button class="bsm hi" onclick="randomTheme()">
+                    🎲 Random
+                  </button>
+                </div>
+              </div>
+              <div id="colorGroupsContainer"></div>
+            </div>
+            <div class="tprev">
+              <div class="prev-hdr">
+                <span>Live Preview</span>
+                <span
+                  id="themeChangedDot"
+                  style="color: var(--a2); display: none"
+                  >● unsaved</span
+                >
+              </div>
+              <div style="padding: 12px; flex: 1; overflow-y: auto">
+                <div class="vsc-mock" id="vscMock"></div>
+                <div
+                  style="
+                    margin-top: 12px;
+                    padding: 10px;
+                    background: var(--sf2);
+                    border: 1px solid var(--bdr);
+                    border-radius: 6px;
+                  "
+                >
+                  <div
+                    style="
+                      font-family: var(--mono);
+                      font-size: 0.65rem;
+                      color: var(--mt2);
+                      text-transform: uppercase;
+                      letter-spacing: 0.1em;
+                      margin-bottom: 8px;
+                    "
+                  >
+                    Token Colors
+                  </div>
+                  <div id="tokenPrev"></div>
+                </div>
+              </div>
+              <div class="tactns">
+                <input
+                  type="text"
+                  class="tni"
+                  id="themeNameIn"
+                  value="My Custom Theme"
+                  placeholder="Theme Name"
+                />
+                <button class="btn-exp" onclick="exportTheme()">
+                  ⬇️ Export
+                </button>
+              </div>
+              <div style="padding: 0 14px 12px">
+                <button
+                  class="bsm green"
+                  style="width: 100%; justify-content: center; padding: 9px"
+                  onclick="importTheme()"
+                >
+                  📂 Import JSON
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Icon Pack -->
+        <div class="page" id="page-icons">
+          <div class="icon-layout">
+            <div class="icon-sb">
+              <div class="isec">
+                <h3>Brush &amp; Color</h3>
+                <div class="itr">
+                  <label>Stroke</label>
+                  <input
+                    type="color"
+                    id="iconColor"
+                    value="#3b82f6"
+                    style="
+                      width: 38px;
+                      height: 26px;
+                      padding: 2px;
+                      border-radius: 4px;
+                      border: 1px solid var(--bdr);
+                      background: var(--sf2);
+                      cursor: pointer;
+                    "
+                  />
+                  <input
+                    type="range"
+                    id="strokeSize"
+                    min="1"
+                    max="12"
+                    value="2"
+                    class="srange"
+                    style="width: 70px; margin: 0"
+                  />
+                  <span
+                    id="strokeSizeVal"
+                    style="
+                      font-family: var(--mono);
+                      font-size: 0.68rem;
+                      color: var(--a1);
+                      min-width: 14px;
+                    "
+                    >2</span
+                  >
+                </div>
+                <div class="itr" style="margin-top: 5px">
+                  <label>Size</label>
+                  <select
+                    id="iconSize"
+                    class="ssel"
+                    style="flex: 1; font-size: 0.7rem; padding: 4px 7px"
+                  >
+                    <option value="16">16×16</option>
+                    <option value="32" selected>32×32</option>
+                    <option value="48">48×48</option>
+                    <option value="64">64×64</option>
+                    <option value="128">128×128</option>
+                  </select>
+                </div>
+                <div class="itr" style="margin-top: 5px">
+                  <label>Opacity</label>
+                  <input
+                    type="range"
+                    id="iconOpacity"
+                    min="0"
+                    max="100"
+                    value="100"
+                    class="srange"
+                    style="flex: 1; margin: 0"
+                  />
+                  <span
+                    id="opacityVal"
+                    style="
+                      font-family: var(--mono);
+                      font-size: 0.68rem;
+                      color: var(--a1);
+                      min-width: 28px;
+                    "
+                    >100%</span
+                  >
+                </div>
+              </div>
+              <div class="isec" style="flex-shrink: 0">
+                <h3>Quick Shapes</h3>
+              </div>
+              <div class="sgrid" id="shapePalette"></div>
+              <div class="isec" style="padding-top: 8px; flex-shrink: 0">
+                <h3>Colors</h3>
+              </div>
+              <div
+                id="colorPalette"
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(7, 1fr);
+                  gap: 4px;
+                  padding: 8px 13px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <div class="isec" style="padding-top: 8px; flex-shrink: 0">
+                <h3>Pack (<span id="packCount">0</span>)</h3>
+              </div>
+              <div class="icon-plist" id="packList">
+                <div
+                  style="
+                    font-family: var(--mono);
+                    font-size: 0.73rem;
+                    color: var(--mt2);
+                    text-align: center;
+                    padding: 14px;
+                  "
+                >
+                  No icons yet. Draw and save!
+                </div>
+              </div>
+            </div>
+            <div class="icon-main">
+              <div class="itbar">
+                <button
+                  class="tbtn on"
+                  id="tool-pencil"
+                  title="Pencil"
+                  onclick="setTool('pencil')"
+                >
+                  ✏️
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-line"
+                  title="Line"
+                  onclick="setTool('line')"
+                >
+                  ╱
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-rect"
+                  title="Rectangle"
+                  onclick="setTool('rect')"
+                >
+                  ⬜
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-circle"
+                  title="Circle"
+                  onclick="setTool('ellipse')"
+                >
+                  ⭕
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-triangle"
+                  title="Triangle"
+                  onclick="setTool('triangle')"
+                >
+                  △
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-arrow"
+                  title="Arrow"
+                  onclick="setTool('arrow')"
+                >
+                  →
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-fill"
+                  title="Fill"
+                  onclick="setTool('fill')"
+                >
+                  🪣
+                </button>
+                <button
+                  class="tbtn"
+                  id="tool-eraser"
+                  title="Eraser"
+                  onclick="setTool('eraser')"
+                >
+                  🧹
+                </button>
+                <div class="tdiv"></div>
+                <button class="tbtn" title="Undo" onclick="undo()">↩️</button>
+                <button class="tbtn" title="Redo" onclick="redo()">↪️</button>
+                <button class="tbtn" title="Clear" onclick="clearCanvas()">
+                  🗑️
+                </button>
+                <div class="tdiv"></div>
+                <button class="tbtn" title="Zoom In" onclick="zoomCanvas(1.5)">
+                  +
+                </button>
+                <button
+                  class="tbtn"
+                  title="Zoom Out"
+                  onclick="zoomCanvas(0.67)"
+                >
+                  −
+                </button>
+                <button class="tbtn" title="Flip H" onclick="flipCanvas('h')">
+                  ↔️
+                </button>
+                <button class="tbtn" title="Flip V" onclick="flipCanvas('v')">
+                  ↕️
+                </button>
+                <div class="tdiv"></div>
+                <span
+                  style="
+                    font-family: var(--mono);
+                    font-size: 0.7rem;
+                    color: var(--mt);
+                    padding: 0 6px;
+                  "
+                  id="canvasSizeLabel"
+                  >32×32 px</span
+                >
+                <span
+                  style="
+                    font-family: var(--mono);
+                    font-size: 0.7rem;
+                    color: var(--mt2);
+                    padding: 0 6px;
+                  "
+                  id="cursorPos"
+                  >0, 0</span
+                >
+              </div>
+              <div class="icon-canvas-wrap">
+                <div class="cbg"></div>
+                <canvas id="iconCanvas" width="320" height="320"></canvas>
+              </div>
+              <div class="ibbar">
+                <input
+                  type="text"
+                  style="flex: 1"
+                  id="iconNameIn"
+                  value="my-icon"
+                  placeholder="icon name"
+                />
+                <input
+                  type="text"
+                  style="width: 75px"
+                  id="iconExtIn"
+                  value=".ts"
+                  placeholder=".ts"
+                />
+                <select
+                  class="ssel"
+                  id="iconCat"
+                  style="font-size: 0.7rem; padding: 5px 8px"
+                >
+                  <option value="file">File Icon</option>
+                  <option value="folder">Folder Icon</option>
+                  <option value="rootFolder">Root Folder</option>
+                </select>
+                <button class="bsm" onclick="saveIconToPack()">💾 Save</button>
+                <button class="bsm hi" onclick="exportIconPack()">
+                  ⬇️ Export
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VS Code Settings -->
+        <div class="page" id="page-settings">
+          <div class="settings-layout">
+            <div class="snav" id="settingsNav"></div>
+            <div class="scont" id="settingsContent"></div>
+            <div class="jpanel">
+              <div class="jphdr">
+                <span>settings.json</span>
+                <div style="display: flex; gap: 6px">
+                  <button class="bsm" onclick="resetSettings()">↺ Reset</button>
+                  <button class="bsm" onclick="copySettingsJSON()">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+              <div class="jout" id="jsonOut"></div>
+              <div class="jfoot">
+                <button
+                  class="bsm hi"
+                  style="flex: 1; justify-content: center; padding: 8px"
+                  onclick="downloadSettingsJSON()"
+                >
+                  ⬇️ Download settings.json
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Snippet Studio -->
+        <div class="page" id="page-snippets">
+          <div class="snip-layout">
+            <div class="snip-sb">
+              <div class="tbar" style="justify-content: space-between">
+                <span
+                  style="
+                    font-family: var(--mono);
+                    font-size: 0.7rem;
+                    color: var(--mt);
+                  "
+                  >Snippets</span
+                >
+                <button class="bsm hi" onclick="addSnippet()">+ New</button>
+              </div>
+              <div class="snip-sb-scroll" id="snippetList"></div>
+              <div class="tbar">
+                <button
+                  class="bsm green"
+                  style="flex: 1; justify-content: center"
+                  onclick="exportSnippets()"
+                >
+                  ⬇️ Export .code-snippets
+                </button>
+              </div>
+            </div>
+            <div class="snip-main">
+              <div class="snip-form" id="snippetForm">
+                <div style="text-align: center; padding: 60px 20px">
+                  <div style="font-size: 48px; margin-bottom: 16px">✂️</div>
+                  <h3
+                    style="
+                      font-family: var(--disp);
+                      font-size: 1.3rem;
+                      margin-bottom: 8px;
+                    "
+                  >
+                    Snippet Studio
+                  </h3>
+                  <p
+                    style="
+                      font-family: var(--mono);
+                      font-size: 0.78rem;
+                      color: var(--mt);
+                    "
+                  >
+                    Create VS Code snippets with tab stops &amp; placeholders.
+                    Click <strong style="color: var(--a1)">+ New</strong> to
+                    start.
+                  </p>
+                </div>
+              </div>
+              <div class="snip-preview">
+                <div class="snip-prev-lbl">snippets.json preview</div>
+                <div class="snip-pkg" id="snippetPreview">{}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Keybindings Editor -->
+        <div class="page" id="page-keybinds">
+          <div class="kb-layout">
+            <div class="kb-tbar">
+              <input
+                type="text"
+                class="kb-search"
+                placeholder="🔍 Search commands..."
+                oninput="filterKeybinds(this.value)"
+              />
+              <button class="bsm hi" onclick="addKeybind()">+ Add</button>
+              <button class="bsm green" onclick="exportKeybinds()">
+                ⬇️ Export JSON
+              </button>
+            </div>
+            <div class="kb-table">
+              <table id="kbTable">
+                <thead>
+                  <tr>
+                    <th>Command</th>
+                    <th>Keybinding</th>
+                    <th class="hidden md:table-cell">When</th>
+                    <th class="hidden sm:table-cell">Category</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="kbBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Changelog Builder -->
+        <div class="page" id="page-changelog">
+          <div class="cl-layout">
+            <div class="cl-editor">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 16px;
+                  flex-wrap: wrap;
+                  gap: 8px;
+                "
+              >
+                <h2
+                  style="
+                    font-family: var(--disp);
+                    font-size: 1.2rem;
+                    font-weight: 800;
+                  "
+                >
+                  Changelog Builder
+                </h2>
+                <div style="display: flex; gap: 7px">
+                  <button class="bsm hi" onclick="addVersion()">
+                    + Version
+                  </button>
+                  <button class="bsm green" onclick="exportChangelog()">
+                    ⬇️ CHANGELOG.md
+                  </button>
+                </div>
+              </div>
+              <div id="changelogVersions"></div>
+            </div>
+            <div class="cl-preview">
+              <div
+                style="
+                  font-family: var(--mono);
+                  font-size: 0.65rem;
+                  color: var(--mt2);
+                  text-transform: uppercase;
+                  letter-spacing: 0.1em;
+                  margin-bottom: 12px;
+                "
+              >
+                Markdown Preview
+              </div>
+              <div class="cl-md" id="changelogPreview"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Publish Wizard -->
+        <div class="page" id="page-publish">
+          <div class="pw-layout" id="publishWizard"></div>
+        </div>
+
+        <!-- Templates -->
+        <div class="page" id="page-templates">
+          <div style="overflow-y: auto; padding: 28px; height: 100%">
+            <div style="max-width: 1000px; margin: 0 auto">
+              <h2
+                style="
+                  font-family: var(--disp);
+                  font-size: 1.4rem;
+                  font-weight: 800;
+                  margin-bottom: 6px;
+                "
+              >
+                📁 Extension Templates
+              </h2>
+              <p
+                style="
+                  font-family: var(--mono);
+                  font-size: 0.76rem;
+                  color: var(--mt);
+                  margin-bottom: 22px;
+                "
+              >
+                Ready-to-use templates. Click any to load it into the builder
+                instantly.
+              </p>
+              <div id="templatesGrid" class="templates-grid"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="statusbar">
+      <div class="sbi a">⚡ ExtForge v2</div>
+      <div class="sbsep"></div>
+      <div class="sbi" id="sbStatus">Ready</div>
+      <div class="sbsep hidden sm:block"></div>
+      <div class="sbi hidden sm:flex" id="sbFile"></div>
+      <div class="sbr">
+        <div class="sbi g hidden sm:flex">● Free &amp; Open</div>
+        <div class="sbsep hidden sm:block"></div>
+        <div class="sbi text-xs">
+          by
+          <a
+            href="https://www.linkedin.com/in/abdelrahman968/"
+            target="_blank"
+            style="color: var(--a2); text-decoration: none; font-weight: 600"
+            >Abdelrahman Ayman</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">✓ <span id="toastMsg">Done!</span></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
