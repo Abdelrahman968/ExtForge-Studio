@@ -523,24 +523,40 @@ function initTemplates(){
   });
 }
 
-function loadTemplate(i){
-  const t=TEMPLATES[i];
-  const c=t.config;
-  document.getElementById('extName').value=c.name;
-  document.getElementById('extDisplay').value=c.displayName;
-  document.getElementById('extCat').value=c.category||'commands';
-  document.getElementById('extLang').value=c.lang||'ts';
-  document.querySelectorAll('.fchip').forEach(chip=>{
-    chip.classList.toggle('on',c.features.includes(chip.dataset.f));
+function loadTemplate(i) {
+  const t = TEMPLATES[i];
+  const c = t.config;
+
+  document.getElementById('extName').value = c.name;
+  document.getElementById('extDisplay').value = c.displayName;
+  document.getElementById('extCat').value = c.category || 'commands';
+  document.getElementById('extLang').value = c.lang || 'ts';
+
+  document.querySelectorAll('.fchip').forEach(chip => {
+    chip.classList.toggle('on', c.features.includes(chip.dataset.f));
   });
-  const wrap=document.getElementById('cmdsWrap'); wrap.innerHTML='';
-  (c.commands||['helloWorld']).forEach(cmd=>{
-    const d=document.createElement('div');d.className='cmd-r';
-    d.innerHTML=`<input type="text" value="${cmd}" placeholder="commandId"><button class="bx" onclick="rmCmd(this)">×</button>`;
+
+  const wrap = document.getElementById('cmdsWrap');
+  wrap.innerHTML = '';
+  (c.commands || ['helloWorld']).forEach(cmd => {
+    const d = document.createElement('div');
+    d.className = 'cmd-r';
+    d.innerHTML = `<input type="text" value="${cmd}" placeholder="commandId">
+                   <button class="bx" onclick="rmCmd(this)">×</button>`;
     wrap.appendChild(d);
   });
-  switchPage('ext',document.querySelector('.mtab'));
-  showToast(`Template "${t.name}" loaded! Click Generate.`);
+
+  // FIX: find the correct tab button instead of just .mtab
+  const extTab = [...document.querySelectorAll('.mtab')].find(t =>
+    t.getAttribute('onclick')?.includes("'ext'")
+  );
+  switchPage('ext', extTab);
+
+  // Scroll sidebar to top so user sees the loaded values
+  const sbScroll = document.querySelector('#mainSidebar .sb-scroll');
+  if (sbScroll) sbScroll.scrollTo({ top: 0, behavior: 'smooth' });
+
+  showToast(`Template "${t.name}" loaded! Click ⚡ Generate.`);
 }
 
 // ════════════════════════════════════════════════════════════
